@@ -18,6 +18,19 @@ pipeline {
                 sh 'mvn clean package -DskipTests'
             }
         }
+
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    def scannerHome = tool 'SonarScanner'
+                    withEnv(["PATH+SONAR=${scannerHome}/bin"]) {
+                        sh '''
+                            mvn clean verify sonar:sonar
+                        '''
+                    }
+                }
+            }
+        }
     }
 
     post {
